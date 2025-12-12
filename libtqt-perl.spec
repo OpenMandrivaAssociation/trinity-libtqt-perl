@@ -1,12 +1,12 @@
-#
-# Please submit bugfixes or comments via http://www.trinitydesktop.org/
-#
+%bcond clang 1
 
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
+%define pkg_rel 2
+
 %define tde_pkg libtqt-perl
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -16,29 +16,22 @@
 %define tde_mandir %{tde_datadir}/man
 %define tde_tdeincludedir %{tde_includedir}/tde
 
-%if 0%{?mdkversion}
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
 %define _disable_rebuild_configure 1
-%endif
 
 %define tarball_name %{tde_pkg}-trinity
-%global toolchain %(readlink /usr/bin/cc)
 
 
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.008
-Release:	%{?tde_version}_%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?tde_version}_%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
 Summary:	Perl bindings for the TQt library
 Group:		Development/Libraries/Perl
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -50,9 +43,9 @@ Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
 BuildRequires:	autoconf automake libtool 
-%if "%{?toolchain}" != "clang"
-BuildRequires:	gcc-c++
-%endif
+
+%{!?with_clang:BuildRequires:	gcc-c++}
+
 BuildRequires:	desktop-file-utils
 BuildRequires:	pkgconfig
 
@@ -118,12 +111,6 @@ It provides an object-oriented interface and is easy to use.
 
 ##########
 
-%if 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %autosetup -n %{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}
 
@@ -155,11 +142,6 @@ export PATH="%{tde_bindir}:${PATH}"
   --disable-gcc-hidden-visibility \
   \
   --disable-smoke
-
-# Fix invalid path in RHEL 5
-%if 0%{?rhel} == 5
-%__sed -i "PerlTQt/Makefile" -e "s|\$(PREFIX)/|\$(DESTDIR)\$(PREFIX)/|"
-%endif
 
 %__make %{?_smp_mflags}
 
