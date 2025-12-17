@@ -29,7 +29,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.008
-Release:	%{?tde_version}_%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?tde_version}_%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}1
 Summary:	Perl bindings for the TQt library
 Group:		Development/Libraries/Perl
 URL:		http://www.trinitydesktop.org/
