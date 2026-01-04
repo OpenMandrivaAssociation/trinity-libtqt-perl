@@ -5,16 +5,11 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 2
+%define pkg_rel 3
 
 %define tde_pkg libtqt-perl
 %define tde_prefix /opt/trinity
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_mandir %{tde_datadir}/man
-%define tde_tdeincludedir %{tde_includedir}/tde
+
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -33,10 +28,6 @@ URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
-#Vendor:		Trinity Desktop
-#Packager:	Francois Andriot <francois.andriot@free.fr>
-
-Prefix:		%{tde_prefix}
 
 Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/libraries/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
 
@@ -71,8 +62,8 @@ It provides an object-oriented interface and is easy to use.
 
 %files
 %defattr(-,root,root,-)
-%{tde_bindir}/puic
-%{tde_mandir}/man1/puic.1*
+%{tde_prefix}/bin/puic
+%{tde_prefix}/share/man/man1/puic.1*
 %{_bindir}/pqtapi
 %{_bindir}/pqtsh
 %if 0%{?rhel} == 5
@@ -122,16 +113,16 @@ It provides an object-oriented interface and is easy to use.
 %build
 unset QTDIR QTINC QTLIB
 export TDEDIR=%{tde_prefix}
-export PATH="%{tde_bindir}:${PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
 
 %configure \
   --prefix=%{tde_prefix} \
   --exec-prefix=%{tde_prefix} \
-  --bindir=%{tde_bindir} \
-  --datadir=%{tde_datadir} \
-  --libdir=%{tde_libdir} \
-  --mandir=%{tde_mandir} \
-  --includedir=%{tde_tdeincludedir} \
+  --bindir=%{tde_prefix}/bin \
+  --datadir=%{tde_prefix}/share \
+  --libdir=%{tde_prefix}/%{_lib} \
+  --mandir=%{tde_prefix}/share/man \
+  --includedir=%{tde_prefix}/include/tde \
   \
   --disable-dependency-tracking \
   --disable-debug \
@@ -147,7 +138,7 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %install
-export PATH="%{tde_bindir}:${PATH}"
+export PATH="%{tde_prefix}/bin:${PATH}"
 %__make install DESTDIR=%{buildroot}
 
 # Unwanted files
