@@ -33,7 +33,7 @@ Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/
 
 BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
 
-BuildRequires:	autoconf automake libtool 
+BuildRequires:	autoconf automake libtool make
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
