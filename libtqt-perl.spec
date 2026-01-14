@@ -38,6 +38,7 @@ BuildRequires:	autoconf automake libtool make
 %{!?with_clang:BuildRequires:	gcc-c++}
 
 BuildRequires:	desktop-file-utils
+BuildRequires:  nas-devel
 BuildRequires:	pkgconfig
 
 BuildRequires:	trinity-libsmoketqt-devel >= %{tde_version}
